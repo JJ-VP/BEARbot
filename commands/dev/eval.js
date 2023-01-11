@@ -11,11 +11,17 @@ module.exports = {
 			required: true,
 			type: ApplicationCommandOptionType.String,
 		},
+		{
+			name: "ephemeral",
+			description: "Should the bot respond silently?",
+			type: ApplicationCommandOptionType.Boolean,
+		},
 	],
 
 	callback: async (client, interaction) => {
 		try {
 			const code = interaction.options.getString("code");
+			const ephemeral = interaction.options.getBoolean("ephemeral");
 			let done;
 			try {
 				done = await eval(code);
@@ -37,7 +43,11 @@ module.exports = {
 					},
 				);
 
-			interaction.reply({ embeds: [evalEmbed] });
+			if (ephemeral) {
+				interaction.reply({ embeds: [evalEmbed], ephemeral: true });
+			} else {
+				interaction.reply({ embeds: [evalEmbed] });
+			}
 		} catch (e) {
 			console.log(e);
 			interaction.reply({
