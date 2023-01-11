@@ -3,7 +3,6 @@ const { ApplicationCommandOptionType, EmbedBuilder, underscore } = require("disc
 module.exports = {
 	name: "serverinfo",
 	description: "Get information bout the server",
-	devOnly: true,
 	options: [
 		{
 			name: "all",
