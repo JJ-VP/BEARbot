@@ -26,12 +26,19 @@ module.exports = {
 
 		if (user) {
 			interaction.channel.messages.fetch().then((messages) => {
-				let userMessages = messages.filter((m) => m.author === user);
-				for (let message of userMessages) {
-					message.delete();
-				}
+				const userMessages = messages.filter((m) => m.author.id === user.id);
+
+				let i = 0;
+				userMessages.forEach(async function (value, key) {
+					if (i >= lines) {
+						return;
+					}
+					value.delete();
+					await sleep(333);
+					i++;
+				});
 			});
-			interaction.reply(`Deleted ${lines} messages`);
+			interaction.reply(`Deleting ${lines} messages`);
 			await sleep(3000);
 			interaction.deleteReply();
 		} else {
