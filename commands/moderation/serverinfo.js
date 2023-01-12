@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, EmbedBuilder, underscore } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
 
 module.exports = {
 	name: "serverinfo",
