@@ -13,7 +13,7 @@ module.exports = {
 		{
 			name: "target-user",
 			description: "The user to clear.",
-			type: ApplicationCommandOptionType.Mentionable,
+			type: ApplicationCommandOptionType.User,
 		},
 	],
 	permissionsRequired: [PermissionFlagsBits.ManageMessages],
@@ -21,7 +21,7 @@ module.exports = {
 
 	callback: async (client, interaction) => {
 		const lines = interaction.options.getNumber("lines");
-		const user = interaction.options.getMentionable("target-user");
+		const user = interaction.options.getUser("target-user");
 		const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 		if (user) {

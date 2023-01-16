@@ -8,7 +8,7 @@ module.exports = {
 			name: "target-user",
 			description: "The user to kick.",
 			required: true,
-			type: ApplicationCommandOptionType.Mentionable,
+			type: ApplicationCommandOptionType.User,
 		},
 		{
 			name: "reason",
@@ -20,7 +20,7 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.KickMembers],
 
 	callback: (client, interaction) => {
-		const user = interaction.options.getMentionable("target-user");
+		const user = interaction.options.getUser("target-user");
 		const reason = interaction.options.getString("reason");
 		interaction.guild.members.kick(user, { reason: reason });
 		if (reason) {

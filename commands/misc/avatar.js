@@ -8,12 +8,12 @@ module.exports = {
 			name: "target-user",
 			description: `The user who's avatar you want.`,
 			required: false,
-			type: ApplicationCommandOptionType.Mentionable,
+			type: ApplicationCommandOptionType.User,
 		},
 	],
 
 	callback: (client, interaction) => {
-		const user = interaction.options.getMentionable("target-user");
+		const user = interaction.options.getUser("target-user");
 		if (user) {
 			const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 512 });
 			interaction.reply(avatar);
