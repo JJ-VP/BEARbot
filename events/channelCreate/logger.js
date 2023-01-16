@@ -5,7 +5,6 @@ module.exports = async (client, guildChannel) => {
 	if (!channel) return;
 	const embed = new EmbedBuilder()
 		.setColor("#00ff00")
-		.setTitle("BEAR Logger")
 		.addFields({ name: "Channel Created", value: `${guildChannel.name}` })
 		.setTimestamp()
 		.setFooter({ text: "Event logged", iconURL: `${client.user.avatarURL({ format: "png", dynamic: true, size: 512 })}` });
