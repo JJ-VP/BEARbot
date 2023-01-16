@@ -15,11 +15,15 @@ BEAR-bot is a Discord bot originally written for BEAR PMC but expanded with gene
 
 ### Clone this repo
 
-`git clone https://github.com/JJ-VP/BEARbot.git`
+```
+git clone https://github.com/JJ-VP/BEARbot.git
+```
 
 ### Install dependancies
 
-`npm i`
+```
+npm i
+```
 
 ### Setup the bot token
 
