@@ -23,20 +23,15 @@ module.exports = {
 		const lines = interaction.options.getNumber("lines");
 		const user = interaction.options.getUser("target-user");
 		const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+		let done = false;
 
 		if (user) {
-			interaction.channel.messages.fetch().then((messages) => {
+			interaction.channel.messages.fetch({ limit: lines }).then(async (messages) => {
 				const userMessages = messages.filter((m) => m.author.id === user.id);
-
-				let i = 0;
-				userMessages.forEach(async function (value, key) {
-					if (i >= lines) {
-						return;
-					}
+				await userMessages.forEach(function (value, key) {
 					value.delete();
-					await sleep(333);
-					i++;
-				});
+				}); //Send finished message before it has actually finished :(
+				await interaction.channel.send({ content: `Finished deleting ${lines} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
 			});
 			interaction.reply(`Deleting ${lines} messages`);
 			await sleep(3000);
