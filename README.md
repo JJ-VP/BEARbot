@@ -8,7 +8,8 @@ BEAR-bot is a Discord bot originally written for BEAR PMC but expanded with gene
 
 ### Requirement
 
-[git](https://git-scm.com/) [nodeJs](https://nodejs.org/)
+- [git](https://git-scm.com/)
+- [nodeJs](https://nodejs.org/)
 
 ## How to install this bot
 
@@ -22,7 +23,7 @@ BEAR-bot is a Discord bot originally written for BEAR PMC but expanded with gene
 
 ### Setup the bot token
 
-1. Get your bot token from [Discord Developers](https://discord.com/developers/applications/)
+1. Get your bot token from [Discord Developer Portal](https://discord.com/developers/applications/)
 2. Create a file in the bot root called `.env`
 3. Put the following in the file
 
