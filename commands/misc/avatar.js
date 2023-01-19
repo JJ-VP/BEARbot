@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "avatar",
@@ -13,17 +14,21 @@ module.exports = {
 	],
 
 	callback: (client, interaction) => {
-		const user = interaction.options.getUser("target-user");
-		if (user) {
-			const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 512 });
-			interaction.reply(avatar);
-		} else {
-			const avatar = interaction.member.displayAvatarURL({
-				format: "png",
-				dynamic: true,
-				size: 512,
-			});
-			interaction.reply(avatar);
+		try {
+			const user = interaction.options.getUser("target-user");
+			if (user) {
+				const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 512 });
+				interaction.reply(avatar);
+			} else {
+				const avatar = interaction.member.displayAvatarURL({
+					format: "png",
+					dynamic: true,
+					size: 512,
+				});
+				interaction.reply(avatar);
+			}
+		} catch (e) {
+			error.error(client, e, interaction);
 		}
 	},
 };

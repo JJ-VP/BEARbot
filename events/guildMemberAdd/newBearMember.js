@@ -1,3 +1,5 @@
+const error = require("../../handlers/errorHandler.js");
+
 module.exports = async (client, guildMember) => {
 	try {
 		if (guildMember.guild.id != `873678199723270175`) return;
@@ -5,6 +7,6 @@ module.exports = async (client, guildMember) => {
 		guildMember.roles.add(roleID);
 		console.log(`"${guildMember.displayName}" just joined BEAR, assigned Recruit role!`);
 	} catch (e) {
-		console.log(e);
+		error.error(client, e);
 	}
 };

@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "roleremove",
@@ -32,8 +33,7 @@ module.exports = {
 				interaction.reply({ content: `${user} does not have the ${role} role.`, ephemeral: true });
 			}
 		} catch (e) {
-			console.log(e);
-			interaction.reply({ content: `There was an error performing that command.`, ephemeral: true });
+			error.error(client, e, interaction);
 		}
 	},
 };

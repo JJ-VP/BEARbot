@@ -1,3 +1,5 @@
+const error = require("../../handlers/errorHandler.js");
+
 module.exports = {
 	name: "ping",
 	description: "Pong!",
@@ -7,6 +9,10 @@ module.exports = {
 	// deleted: Boolean,
 
 	callback: (client, interaction) => {
-		interaction.reply(`Pong! ${client.ws.ping}ms`);
+		try {
+			interaction.reply(`Pong! ${client.ws.ping}ms`);
+		} catch (e) {
+			error.error(client, e, interaction);
+		}
 	},
 };

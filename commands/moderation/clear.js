@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "clear",
@@ -20,31 +21,35 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.ManageMessages],
 
 	callback: async (client, interaction) => {
-		const lines = interaction.options.getNumber("lines");
-		const user = interaction.options.getUser("target-user");
-		const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
-		let done = false;
+		try {
+			const lines = interaction.options.getNumber("lines");
+			const user = interaction.options.getUser("target-user");
+			const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+			let done = false;
 
-		if (user) {
-			interaction.channel.messages.fetch({ limit: lines }).then(async (messages) => {
-				const userMessages = messages.filter((m) => m.author.id === user.id);
-				await userMessages.forEach(function (value, key) {
-					value.delete();
-				}); //Send finished message before it has actually finished :(
-				await interaction.channel.send({ content: `Finished deleting ${lines} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
-			});
-			interaction.reply(`Deleting ${lines} messages`);
-			await sleep(3000);
-			interaction.deleteReply();
-		} else {
-			try {
-				interaction.channel.bulkDelete(lines);
-				interaction.reply(`Deleted ${lines} messages`);
+			if (user) {
+				interaction.channel.messages.fetch({ limit: lines }).then(async (messages) => {
+					const userMessages = messages.filter((m) => m.author.id === user.id);
+					await userMessages.forEach(function (value, key) {
+						value.delete();
+					}); //Send finished message before it has actually finished :(
+					await interaction.channel.send({ content: `Finished deleting ${lines} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
+				});
+				interaction.reply(`Deleting ${lines} messages`);
 				await sleep(3000);
 				interaction.deleteReply();
-			} catch (e) {
-				console.log(e);
+			} else {
+				try {
+					interaction.channel.bulkDelete(lines);
+					interaction.reply(`Deleted ${lines} messages`);
+					await sleep(3000);
+					interaction.deleteReply();
+				} catch (e) {
+					console.log(e);
+				}
 			}
+		} catch (e) {
+			error.error(client, e, interaction);
 		}
 	},
 };

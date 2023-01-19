@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "unban",
@@ -15,8 +16,12 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.BanMembers],
 
 	callback: (client, interaction) => {
-		const user = interaction.options.getUser("target-user");
-		interaction.guild.members.unban(user);
-		interaction.reply(`${interaction.member.displayName} unbanned ${user}`);
+		try {
+			const user = interaction.options.getUser("target-user");
+			interaction.guild.members.unban(user);
+			interaction.reply(`${interaction.member.displayName} unbanned ${user}`);
+		} catch (e) {
+			error.error(client, e, interaction);
+		}
 	},
 };

@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "roleadd",
@@ -34,8 +35,7 @@ module.exports = {
 				interaction.reply(`Added ${role} to ${user}`);
 			}
 		} catch (e) {
-			console.log(e);
-			interaction.reply({ content: `There was an error performing that command.`, ephemeral: true });
+			error.error(client, e, interaction);
 		}
 	},
 };

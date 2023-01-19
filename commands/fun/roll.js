@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "roll",
@@ -19,13 +20,17 @@ module.exports = {
 	],
 
 	callback: (client, interaction) => {
-		const number = interaction.options.getInteger("number");
-		const size = interaction.options.getInteger("size");
-		let results = [];
-		for (let i = 0; i < number; i++) {
-			let random = Math.floor(Math.random() * size + 1);
-			results.push(`[${random}/${size}]`);
+		try {
+			const number = interaction.options.getInteger("number");
+			const size = interaction.options.getInteger("size");
+			let results = [];
+			for (let i = 0; i < number; i++) {
+				let random = Math.floor(Math.random() * size + 1);
+				results.push(`[${random}/${size}]`);
+			}
+			interaction.reply(`The dice landed on: ${results}`);
+		} catch (e) {
+			error.error(client, e, interaction);
 		}
-		interaction.reply(`The dice landed on: ${results}`);
 	},
 };

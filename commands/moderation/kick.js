@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "kick",
@@ -20,13 +21,17 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.KickMembers],
 
 	callback: (client, interaction) => {
-		const user = interaction.options.getUser("target-user");
-		const reason = interaction.options.getString("reason");
-		interaction.guild.members.kick(user, { reason: reason });
-		if (reason) {
-			interaction.reply(`${interaction.member.displayName} kicked ${user} for ${reason}`);
-		} else {
-			interaction.reply(`${interaction.member.displayName} kicked ${user}`);
+		try {
+			const user = interaction.options.getUser("target-user");
+			const reason = interaction.options.getString("reason");
+			interaction.guild.members.kick(user, { reason: reason });
+			if (reason) {
+				interaction.reply(`${interaction.member.displayName} kicked ${user} for ${reason}`);
+			} else {
+				interaction.reply(`${interaction.member.displayName} kicked ${user}`);
+			}
+		} catch (e) {
+			error.error(client, e, interaction);
 		}
 	},
 };

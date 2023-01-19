@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "say",
@@ -14,8 +15,12 @@ module.exports = {
 	],
 
 	callback: (client, interaction) => {
-		interaction.deferReply();
-		interaction.channel.send(`${interaction.options.getString("message")}`);
-		interaction.deleteReply();
+		try {
+			interaction.deferReply();
+			interaction.channel.send(`${interaction.options.getString("message")}`);
+			interaction.deleteReply();
+		} catch (e) {
+			error.error(client, e, interaction);
+		}
 	},
 };

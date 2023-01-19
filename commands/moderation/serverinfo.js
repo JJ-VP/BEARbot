@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "serverinfo",
@@ -147,11 +148,7 @@ module.exports = {
 				await interaction.followUp({ embeds: [e] });
 			});
 		} catch (e) {
-			console.log(e);
-			interaction.reply({
-				content: `There was an error performing that command.`,
-				ephemeral: true,
-			});
+			error.error(client, e, interaction);
 		}
 	},
 };

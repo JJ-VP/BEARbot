@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
-	error: async (client, error, guild, channel, user, interaction) => {
+	error: async (client, error, interaction) => {
 		try {
 			let devs = ["176721924448059402"];
 			if (interaction) {
@@ -20,7 +20,7 @@ module.exports = {
 				const embedDev = new EmbedBuilder()
 					.setColor("#ff0000")
 					.setTitle("Error")
-					.addFields({ name: "command", value: `${interaction.command.name}` }, { name: "Options:", value: `${options}` }, { name: "Guild:", value: `${guild}` }, { name: "Channel", value: `${channel}` }, { name: "User:", value: `${user}` }, { name: "Error:", value: `${error}` })
+					.addFields({ name: "command", value: `${interaction.command.name}` }, { name: "Options:", value: `${options}` }, { name: "Guild:", value: `${interaction.guild}` }, { name: "Channel", value: `${interaction.channel}` }, { name: "User:", value: `${interaction.user}` }, { name: "Error:", value: `${error}` })
 					.setTimestamp()
 					.setFooter({ text: "Error logged", iconURL: `${client.user.avatarURL({ format: "png", dynamic: true, size: 512 })}` });
 

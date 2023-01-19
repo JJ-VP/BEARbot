@@ -1,4 +1,5 @@
 require("discord.js");
+const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "kill",
@@ -13,11 +14,7 @@ module.exports = {
 				process.exit();
 			}, 1000);
 		} catch (e) {
-			interaction.reply({
-				content: `'Muahahaha you can never kill me! *(this is a bug, you should have killed me 0.o)*'`,
-				ephemeral: true,
-			});
-			console.log(e);
+			error.error(client, e, interaction);
 		}
 	},
 };
