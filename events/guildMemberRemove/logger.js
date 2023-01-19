@@ -1,14 +1,13 @@
 const { EmbedBuilder } = require("discord.js");
 const error = require("../../handlers/errorHandler.js");
 
-module.exports = async (client, guildChannel) => {
+module.exports = async (client, guildMember) => {
 	try {
-		const channel = guildChannel.guild.channels.cache.find((c) => c.name === `bear-log`);
+		const channel = guildMember.guild.channels.cache.find((c) => c.name === `bear-log`);
 		if (!channel) return;
 		const embed = new EmbedBuilder()
 			.setColor("#ff0000")
-			.setTitle(`Channel Deleted`)
-			.addFields({ name: " ", value: `${guildChannel.name}` })
+			.addFields({ name: "Member Left", value: `${guildMember.displayName}` })
 			.setTimestamp()
 			.setFooter({ text: "Event logged", iconURL: `${client.user.avatarURL({ format: "png", dynamic: true, size: 512 })}` });
 
