@@ -3,7 +3,7 @@ const error = require("../../handlers/errorHandler.js");
 
 module.exports = {
 	name: "serverinfo",
-	description: "Get information bout the server",
+	description: "Get information about the server",
 	options: [
 		{
 			name: "all",
