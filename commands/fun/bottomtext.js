@@ -21,9 +21,10 @@ module.exports = {
 	],
 
 	callback: async (client, interaction) => {
+		interaction.deferReply();
 		try {
 			const file = interaction.options.getAttachment("image");
-			const text = interaction.options.getString("text");
+			const text = interaction.options.getString("text").toUpperCase();
 			const extension = file.name.split(".").pop().toLowerCase();
 			const allowedTypes = ["png", "jpg", "jpeg", "avif", "webp", "gif"];
 			if (allowedTypes.indexOf(extension) < 0) return interaction.reply({ content: `The filetype you surplied is not supported by this command :png, jpg, jpeg, avif, webp, gif(animated soon)`, ephemeral: true });
@@ -43,10 +44,11 @@ module.exports = {
 			context.fillStyle = "white";
 			context.textAlign = "center";
 			context.fillText(text, canvas.width / 2, canvas.height / 1.05);
+			context.lineWidth = 2;
 			context.strokeStyle = "black";
 			context.strokeText(text, canvas.width / 2, canvas.height / 1.05);
 			const Attachment = new AttachmentBuilder(await canvas.encode(`png`), { name: `bottomText.png` });
-			interaction.reply({ files: [Attachment] });
+			interaction.editReply({ files: [Attachment] });
 			//I don't like how this works... but it works.
 		} catch (e) {
 			console.log(e);
