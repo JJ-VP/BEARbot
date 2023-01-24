@@ -21,7 +21,7 @@ module.exports = {
 	],
 
 	callback: async (client, interaction) => {
-		interaction.deferReply();
+		await interaction.deferReply();
 		try {
 			const file = interaction.options.getAttachment("image");
 			const text = interaction.options.getString("text").toUpperCase();
