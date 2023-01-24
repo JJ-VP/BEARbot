@@ -6,7 +6,7 @@ const getLocalCommands = require("../../utils/getLocalCommands");
 module.exports = async (client) => {
 	try {
 		const localCommands = getLocalCommands();
-		const applicationCommands = await getApplicationCommands(client, testServer);
+		const applicationCommands = await getApplicationCommands(client);
 
 		for (const localCommand of localCommands) {
 			const { name, description, options } = localCommand;
@@ -44,6 +44,6 @@ module.exports = async (client) => {
 			}
 		}
 	} catch (error) {
-		console.log(`TThere was an error: ${error}`);
+		console.log(`There was an error: ${error}`);
 	}
 };
