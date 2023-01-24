@@ -7,16 +7,16 @@ module.exports = {
 	description: "Add text to the bottom of an image!",
 	options: [
 		{
-			name: "image",
-			description: "The image you want to add text too.",
-			required: true,
-			type: ApplicationCommandOptionType.Attachment,
-		},
-		{
 			name: "text",
 			description: "The text you want to add to the image.",
 			required: true,
 			type: ApplicationCommandOptionType.String,
+		},
+		{
+			name: "image",
+			description: "The image you want to add text too.",
+			required: true,
+			type: ApplicationCommandOptionType.Attachment,
 		},
 	],
 
