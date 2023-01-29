@@ -21,9 +21,10 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.ManageMessages],
 
 	callback: async (client, interaction) => {
-		await interaction.deferReply();
 		try {
-			const lines = interaction.options.getNumber("lines");
+			await interaction.deferReply();
+			await interaction.deleteReply();
+			const lines = interaction.options.getNumber("lines") + 1;
 			const user = interaction.options.getUser("target-user");
 			const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 			let done = false;
@@ -33,18 +34,18 @@ module.exports = {
 					const userMessages = messages.filter((m) => m.author.id === user.id);
 					await userMessages.forEach(function (value, key) {
 						value.delete();
-					}); //Send finished message before it has actually finished :(
-					await interaction.channel.send({ content: `Finished deleting ${lines} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
+					});
+					await interaction.channel.send({ content: `Finished deleting ${lines - 1} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
 				});
-				interaction.editReply(`Deleting ${lines} messages`);
-				await sleep(3000);
-				interaction.deleteReply();
+				interaction.channel.send(`Deleting ${lines - 1} messages`).then((m) =>
+					setTimeout(() => {
+						m.delete();
+					}, 1000),
+				);
 			} else {
 				try {
 					interaction.channel.bulkDelete(lines);
-					interaction.editReply(`Deleted ${lines} messages`);
-					await sleep(3000);
-					interaction.deleteReply();
+					await interaction.channel.send({ content: `Finished deleting ${lines - 1} messages`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
 				} catch (e) {
 					console.log(e);
 				}
