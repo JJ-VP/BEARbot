@@ -20,15 +20,16 @@ module.exports = {
 	permissionsRequired: [PermissionFlagsBits.KickMembers],
 	botPermissions: [PermissionFlagsBits.KickMembers],
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const user = interaction.options.getUser("target-user");
 			const reason = interaction.options.getString("reason");
 			interaction.guild.members.kick(user, { reason: reason });
 			if (reason) {
-				interaction.reply(`${interaction.member.displayName} kicked ${user} for ${reason}`);
+				interaction.editReply(`${interaction.member.displayName} kicked ${user} for ${reason}`);
 			} else {
-				interaction.reply(`${interaction.member.displayName} kicked ${user}`);
+				interaction.editReply(`${interaction.member.displayName} kicked ${user}`);
 			}
 		} catch (e) {
 			error.error(client, e, interaction);

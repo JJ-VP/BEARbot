@@ -14,9 +14,9 @@ module.exports = {
 		},
 	],
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
-			interaction.deferReply();
 			interaction.channel.send(`${interaction.options.getString("message")}`);
 			interaction.deleteReply();
 		} catch (e) {

@@ -8,9 +8,10 @@ module.exports = {
 	// options: Object[],
 	// deleted: Boolean,
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
-			interaction.reply(`Pong! ${client.ws.ping}ms`);
+			interaction.editReply(`Pong! ${client.ws.ping}ms`);
 		} catch (e) {
 			error.error(client, e, interaction);
 		}

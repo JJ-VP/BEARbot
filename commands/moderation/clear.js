@@ -21,6 +21,7 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.ManageMessages],
 
 	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const lines = interaction.options.getNumber("lines");
 			const user = interaction.options.getUser("target-user");
@@ -35,13 +36,13 @@ module.exports = {
 					}); //Send finished message before it has actually finished :(
 					await interaction.channel.send({ content: `Finished deleting ${lines} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
 				});
-				interaction.reply(`Deleting ${lines} messages`);
+				interaction.editReply(`Deleting ${lines} messages`);
 				await sleep(3000);
 				interaction.deleteReply();
 			} else {
 				try {
 					interaction.channel.bulkDelete(lines);
-					interaction.reply(`Deleted ${lines} messages`);
+					interaction.editReply(`Deleted ${lines} messages`);
 					await sleep(3000);
 					interaction.deleteReply();
 				} catch (e) {

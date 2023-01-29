@@ -22,15 +22,16 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.ManageRoles],
 
 	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const user = interaction.options.getUser("target-user");
 			const role = interaction.options.getRole("role");
 			const guildUser = await interaction.guild.members.cache.get(user.id);
 			if (guildUser.roles.cache.has(role.id)) {
 				guildUser.roles.remove(role).catch(console.log);
-				interaction.reply(`Removed ${role} from ${user}`);
+				interaction.editReply(`Removed ${role} from ${user}`);
 			} else {
-				interaction.reply({ content: `${user} does not have the ${role} role.`, ephemeral: true });
+				interaction.editReply({ content: `${user} does not have the ${role} role.`, ephemeral: true });
 			}
 		} catch (e) {
 			error.error(client, e, interaction);

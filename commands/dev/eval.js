@@ -20,6 +20,7 @@ module.exports = {
 	],
 
 	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const code = interaction.options.getString("code");
 			const ephemeral = interaction.options.getBoolean("ephemeral");
@@ -45,9 +46,9 @@ module.exports = {
 				);
 
 			if (ephemeral) {
-				interaction.reply({ embeds: [evalEmbed], ephemeral: true });
+				interaction.editReply({ embeds: [evalEmbed], ephemeral: true });
 			} else {
-				interaction.reply({ embeds: [evalEmbed] });
+				interaction.editReply({ embeds: [evalEmbed] });
 			}
 		} catch (e) {
 			error.error(client, e, interaction);

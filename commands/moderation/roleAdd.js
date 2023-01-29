@@ -22,17 +22,18 @@ module.exports = {
 	botPermissions: [PermissionFlagsBits.BanMembers],
 
 	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const user = interaction.options.getUser("target-user");
 			const role = interaction.options.getRole("role");
 			const guildUser = await interaction.guild.members.cache.get(user.id);
-			if (role.managed) return interaction.reply({ content: `${role} is a bot role and cannot be assigned manually`, ephemeral: true });
-			if (!role.editable) return interaction.reply({ content: `I do not have permission to asign the ${role} role as it is higher than any role I have!`, ephemeral: true });
+			if (role.managed) return interaction.editReply({ content: `${role} is a bot role and cannot be assigned manually`, ephemeral: true });
+			if (!role.editable) return interaction.editReply({ content: `I do not have permission to asign the ${role} role as it is higher than any role I have!`, ephemeral: true });
 			if (guildUser.roles.cache.has(role.id)) {
-				interaction.reply({ content: `${user} already has the ${role} role.`, ephemeral: true });
+				interaction.editReply({ content: `${user} already has the ${role} role.`, ephemeral: true });
 			} else {
 				guildUser.roles.add(role).catch(console.log);
-				interaction.reply(`Added ${role} to ${user}`);
+				interaction.editReply(`Added ${role} to ${user}`);
 			}
 		} catch (e) {
 			error.error(client, e, interaction);

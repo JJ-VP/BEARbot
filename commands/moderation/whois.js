@@ -14,6 +14,7 @@ module.exports = {
 	],
 
 	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const user = interaction.options.getUser("target-user");
 			const guildUser = await interaction.guild.members.cache.get(user.id);
@@ -47,7 +48,7 @@ module.exports = {
 				.setTimestamp();
 
 			if (!guildUser.presence.activities[0]) {
-				interaction.reply({ embeds: [whoisEmbed] });
+				interaction.editReply({ embeds: [whoisEmbed] });
 			} else {
 				if (guildUser.presence.activities[1]) {
 					if (guildUser.presence.activities[1].assets !== null) {
@@ -56,14 +57,14 @@ module.exports = {
 							value: `**• Name:** \n${guildUser.presence.activities[1].toString()}\n\n**• Details:** \n${guildUser.presence.activities[1].details}\n\n**• State:** \n${guildUser.presence.activities[1].state}\n\n**• Info 1:** \n${guildUser.presence.activities[1].assets.largeText}\n\n**• Info 2:** \n${guildUser.presence.activities[1].assets.smallText}\n\n**• Playing Since:** \n${guildUser.presence.activities[1].createdAt.toLocaleString("en-GB", { timeStyle: "medium", hourCycle: "h24" })}`,
 							inline: true,
 						});
-						interaction.reply({ embeds: [whoisEmbed] });
+						interaction.editReply({ embeds: [whoisEmbed] });
 					} else {
 						whoisEmbed = whoisEmbed.addFields({ name: `Currently ${guildUser.presence.activities[1].type}:`, value: `**• Name:** ${guildUser.presence.activities[1].toString()}`, inline: true });
-						interaction.reply({ embeds: [whoisEmbed] });
+						interaction.editReply({ embeds: [whoisEmbed] });
 					}
 				} else {
 					whoisEmbed = whoisEmbed.addFields({ name: `Custom status:`, value: `${guildUser.presence.activities[0].emoji}`, inline: true });
-					interaction.reply({ embeds: [whoisEmbed] });
+					interaction.editReply({ embeds: [whoisEmbed] });
 				}
 			}
 		} catch (e) {

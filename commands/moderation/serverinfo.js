@@ -14,6 +14,7 @@ module.exports = {
 	],
 
 	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const serverIcon = interaction.guild.iconURL({ format: "png", dynamic: true, size: 256 });
 			const owner = await interaction.guild.fetchOwner();
@@ -142,7 +143,7 @@ module.exports = {
 					},
 				);
 			}
-			await interaction.reply({ embeds: [embeds[0]] });
+			await interaction.editReply({ embeds: [embeds[0]] });
 			embeds.shift();
 			embeds.forEach(async (e) => {
 				await interaction.followUp({ embeds: [e] });

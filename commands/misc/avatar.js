@@ -13,19 +13,20 @@ module.exports = {
 		},
 	],
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const user = interaction.options.getUser("target-user");
 			if (user) {
 				const avatar = user.displayAvatarURL({ format: "png", dynamic: true, size: 512 });
-				interaction.reply(avatar);
+				interaction.editReply(avatar);
 			} else {
 				const avatar = interaction.member.displayAvatarURL({
 					format: "png",
 					dynamic: true,
 					size: 512,
 				});
-				interaction.reply(avatar);
+				interaction.editReply(avatar);
 			}
 		} catch (e) {
 			error.error(client, e, interaction);

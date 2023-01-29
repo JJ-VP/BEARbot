@@ -19,7 +19,8 @@ module.exports = {
 		},
 	],
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const number = interaction.options.getInteger("number");
 			const size = interaction.options.getInteger("size");
@@ -28,7 +29,7 @@ module.exports = {
 				let random = Math.floor(Math.random() * size + 1);
 				results.push(`[${random}/${size}]`);
 			}
-			interaction.reply(`The dice landed on: ${results}`);
+			await interaction.editreply(`The dice landed on: ${results}`);
 		} catch (e) {
 			error.error(client, e, interaction);
 		}

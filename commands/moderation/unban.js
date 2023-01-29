@@ -15,11 +15,12 @@ module.exports = {
 	permissionsRequired: [PermissionFlagsBits.BanMembers],
 	botPermissions: [PermissionFlagsBits.BanMembers],
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
 			const user = interaction.options.getUser("target-user");
 			interaction.guild.members.unban(user);
-			interaction.reply(`${interaction.member.displayName} unbanned ${user}`);
+			interaction.editReply(`${interaction.member.displayName} unbanned ${user}`);
 		} catch (e) {
 			error.error(client, e, interaction);
 		}

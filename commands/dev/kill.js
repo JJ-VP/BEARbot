@@ -6,9 +6,10 @@ module.exports = {
 	description: "Kill the bot!",
 	devOnly: true,
 
-	callback: (client, interaction) => {
+	callback: async (client, interaction) => {
+		await interaction.deferReply();
 		try {
-			interaction.reply("Bye bye :(");
+			interaction.editReply("Bye bye :(");
 			console.log("Bot killed by " + interaction.user.tag);
 			setTimeout(function () {
 				process.exit();
