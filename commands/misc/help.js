@@ -16,18 +16,34 @@ module.exports = {
 
 			for await (const localCommand of localCommands) {
 				const { name, description, options } = localCommand;
-				let array = [name, description];
-				commands.push(array);
+				if (options) {
+					arrayOptions = [];
+					options.forEach((option, i) => {
+						let string = `Option${i + 1}:${option.description}\n`;
+						arrayOptions.push(string);
+					});
+					let array = [name, description, arrayOptions];
+					commands.push(array);
+				} else {
+					array = [name, description];
+					commands.push(array);
+				}
 			}
 			commands.forEach((e, i) => {
 				if (!embeds[Math.floor(embedCount / 25)]) {
 					embeds.push(new EmbedBuilder().setColor(0x562d1a).addFields().setTimestamp());
 				}
-				embeds[Math.floor(embedCount / 25)].addFields({
-					name: `${commands[i][0]}`,
-					value: `${commands[i][1]}`,
-					inline: true,
-				});
+				if (commands[i][2]) {
+					embeds[Math.floor(embedCount / 25)].addFields({
+						name: `${commands[i][0]}`,
+						value: `\`\`\`${commands[i][1]}\n${commands[i][2].join("")}\`\`\``,
+					});
+				} else {
+					embeds[Math.floor(embedCount / 25)].addFields({
+						name: `${commands[i][0]}`,
+						value: `\`\`\`${commands[i][1]}\`\`\``,
+					});
+				}
 				embedCount++;
 			});
 			await interaction.editReply({ embeds: [embeds[0]] });
