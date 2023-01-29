@@ -10,6 +10,9 @@ module.exports = {
 				for (let i = 0; i < size; i++) {
 					options = options + `${interaction.options._hoistedOptions[i].name}: *${interaction.options._hoistedOptions[i].value}*\n`;
 				}
+				if (options == "") {
+					options = "No Options";
+				}
 				const embedReply = new EmbedBuilder()
 					.setColor("#ff0000")
 					.setTitle(`Error`)
@@ -24,7 +27,7 @@ module.exports = {
 					.setTimestamp()
 					.setFooter({ text: "Error logged", iconURL: `${client.user.avatarURL({ format: "png", dynamic: true, size: 512 })}` });
 
-				await interaction.reply({ embeds: [embedReply], ephemeral: true });
+				await interaction.editReply({ embeds: [embedReply], ephemeral: true });
 				devs.forEach((dev) => {
 					client.users.cache.get(dev).send({ embeds: [embedDev] });
 				});
