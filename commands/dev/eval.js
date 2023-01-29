@@ -20,36 +20,41 @@ module.exports = {
 	],
 
 	callback: async (client, interaction) => {
-		await interaction.deferReply();
 		try {
 			const code = interaction.options.getString("code");
 			const ephemeral = interaction.options.getBoolean("ephemeral");
+			if (ephemeral) {
+				await interaction.deferReply({ ephemeral: true });
+			} else {
+				await interaction.deferReply();
+			}
 			let done;
+			let works = false;
 			try {
 				done = await eval(code);
+				works = true;
 			} catch (e) {
 				done = `${e}`;
 			}
 
-			const evalEmbed = new EmbedBuilder()
-				.setColor(0x562d1a)
-				.setTitle("Success")
-				.addFields(
-					{
-						name: "Input:",
-						value: "```js\n" + `${code}` + "```",
-					},
-					{
-						name: "Output:",
-						value: "```js\n" + done + "```",
-					},
-				);
+			let evalEmbed = new EmbedBuilder().setColor(0x562d1a).addFields(
+				{
+					name: "Input:",
+					value: "```js\n" + `${code}` + "```",
+				},
+				{
+					name: "Output:",
+					value: "```js\n" + done + "```",
+				},
+			);
 
-			if (ephemeral) {
-				interaction.editReply({ embeds: [evalEmbed], ephemeral: true });
+			if (works) {
+				evalEmbed = evalEmbed.setTitle("Success");
 			} else {
-				interaction.editReply({ embeds: [evalEmbed] });
+				evalEmbed = evalEmbed.setTitle("Error");
 			}
+
+			interaction.editReply({ embeds: [evalEmbed] });
 		} catch (e) {
 			error.error(client, e, interaction);
 		}
