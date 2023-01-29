@@ -7,7 +7,7 @@ module.exports = {
 	description: "See all bot command!",
 
 	callback: async (client, interaction) => {
-		await interaction.deferReply();
+		await interaction.deferReply({ ephemeral: true });
 		try {
 			let embeds = [];
 			let embedCount = 0;
