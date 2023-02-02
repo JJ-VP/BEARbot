@@ -32,7 +32,9 @@ npm i
 3. Put the following in the file
 
 ```
-TOKEN=*token from Discord Developers portal*
+TOKEN=*Token from Discord Developers portal*
+testSever=*A server ID for a server you want to test things in*
+clientID=*The client ID of the bot account*
 ```
 
 ### Starting the bot

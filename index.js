@@ -6,8 +6,8 @@ const { Client, GatewayIntentBits, REST } = require("discord.js");
 const rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
 
 const fs = require("fs");
-const path = require("path");
 const eventHandler = require("./handlers/eventHandler");
+var config = JSON.parse(fs.readFileSync("./config.json").toString());
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences],
@@ -16,19 +16,24 @@ const client = new Client({
 eventHandler(client);
 
 process.on("uncaughtException", (error) => {
-	client.users.cache.get(`176721924448059402`).send(`${error}`);
-	console.log(error);
+	console.log(`uncaughtException:\n` + error);
+	config.devs.forEach((dev) => {
+		client.users.cache.get(dev).send(`uncaughtException:\n${error}`);
+	});
 });
 
 client.login(process.env.TOKEN);
-/*
-rest
-	.put(Routes.applicationCommands(`882711984733319210`), { body: [] })
-	.then(() => console.log(`Deleted all commands.`))
-	.catch(console.error);
 
-rest
-	.put(Routes.applicationGuildCommands(`882711984733319210`, `407627181305626654`), { body: [] })
-	.then(() => console.log(`Deleted all testServer commands.`))
-	.catch(console.error);
-*/
+if (config.deleteGlobalCommands) {
+	rest
+		.put(Routes.applicationCommands(process.env.clientID), { body: [] })
+		.then(() => console.log(`Deleted all commands.`))
+		.catch(console.error);
+}
+
+if (config.deleteGuildCommands) {
+	rest
+		.put(Routes.applicationGuildCommands(process.env.clientID, process.env.testServer), { body: [] })
+		.then(() => console.log(`Deleted all testServer commands.`))
+		.catch(console.error);
+}
