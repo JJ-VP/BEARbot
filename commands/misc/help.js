@@ -56,7 +56,7 @@ module.exports = {
 							default:
 								type = `Unknown type`;
 						}
-						let string = `${type}- ${option.description}\n`;
+						let string = `${type} - ${option.description}\n`;
 						arrayOptions.push(string);
 					});
 					let array = [name, description, arrayOptions];
