@@ -13,13 +13,50 @@ module.exports = {
 			let embedCount = 0;
 			const localCommands = getLocalCommands();
 			let commands = [];
-
 			for await (const localCommand of localCommands) {
 				const { name, description, options } = localCommand;
 				if (options) {
-					arrayOptions = [];
+					arrayOptions = [`Options:\n`];
 					options.forEach((option, i) => {
-						let string = `Option${i + 1}:${option.description}\n`;
+						let type;
+						switch (option.type) {
+							case 1:
+								type = `Sub Command`;
+								break;
+							case 2:
+								type = `Sub Command Group`;
+								break;
+							case 3:
+								type = `String`;
+								break;
+							case 4:
+								type = `Integer`;
+								break;
+							case 5:
+								type = `Boolean`;
+								break;
+							case 6:
+								type = `User`;
+								break;
+							case 7:
+								type = `Channel`;
+								break;
+							case 8:
+								type = `Role`;
+								break;
+							case 9:
+								type = `Mentionable`;
+								break;
+							case 10:
+								type = `Number`;
+								break;
+							case 11:
+								type = `Attachment`;
+								break;
+							default:
+								type = `Unknown type`;
+						}
+						let string = `${type}- ${option.description}\n`;
 						arrayOptions.push(string);
 					});
 					let array = [name, description, arrayOptions];
