@@ -22,9 +22,13 @@ module.exports = {
 
 	callback: async (client, interaction) => {
 		try {
-			await interaction.deferReply();
+			await interaction.deferReply({ ephemeral: true });
+			const lines = interaction.options.getNumber("lines");
+			if (lines < 1) {
+				await interaction.editReply({ content: `Unable to delete ${lines} lines. Please input a positive number.` });
+				return;
+			}
 			await interaction.deleteReply();
-			const lines = interaction.options.getNumber("lines") + 1;
 			const user = interaction.options.getUser("target-user");
 			const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 			let done = false;
@@ -35,9 +39,9 @@ module.exports = {
 					await userMessages.forEach(function (value, key) {
 						value.delete();
 					});
-					await interaction.channel.send({ content: `Finished deleting ${lines - 1} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
+					await interaction.channel.send({ content: `Finished deleting ${lines} messages from ${user}`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
 				});
-				interaction.channel.send(`Deleting ${lines - 1} messages`).then((m) =>
+				interaction.channel.send(`Deleting ${lines} messages`).then((m) =>
 					setTimeout(() => {
 						m.delete();
 					}, 1000),
@@ -45,9 +49,9 @@ module.exports = {
 			} else {
 				try {
 					interaction.channel.bulkDelete(lines);
-					await interaction.channel.send({ content: `Finished deleting ${lines - 1} messages`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
+					await interaction.channel.send({ content: `Finished deleting ${lines} messages`, allowedMentions: { users: [] } }).then((message) => setTimeout(() => message.delete(), 3000));
 				} catch (e) {
-					console.log(e);
+					error.error(client, e, interaction);
 				}
 			}
 		} catch (e) {
