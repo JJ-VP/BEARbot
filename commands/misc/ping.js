@@ -17,6 +17,8 @@ module.exports = {
 	// testOnly: Boolean,
 	// options: Object[],
 	// deleted: Boolean,
+	// permissionsRequired: [PermissionFlagsBits],
+	// botPermissions: [PermissionFlagsBits],
 
 	callback: async (client, interaction) => {
 		const ephemeral = interaction.options.getBoolean("ephemeral") || false;
