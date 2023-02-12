@@ -3,17 +3,28 @@ require("dotenv").config();
 const { Routes } = require("discord-api-types/v10");
 const { Client, GatewayIntentBits, REST } = require("discord.js");
 const { devs, deleteGlobalCommands, deleteGuildCommands, testServer, clientID } = require("./config.json");
+const mongoose = require("mongoose");
+const eventHandler = require("./handlers/eventHandler");
 
 const rest = new REST({ version: 10 }).setToken(process.env.TOKEN);
-
-const fs = require("fs");
-const eventHandler = require("./handlers/eventHandler");
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences],
 });
 
-eventHandler(client);
+(async () => {
+	try {
+		mongoose
+			.set("strictQuery", true)
+			.connect(process.env.DBURI)
+			.then(console.log("Connected to MongoDB"))
+			.catch((e) => `Unable to connect to MongoDB:\n${e}`);
+		eventHandler(client);
+		client.login(process.env.TOKEN);
+	} catch (e) {
+		console.log(e);
+	}
+})();
 
 process.on("uncaughtException", (error) => {
 	console.log(`uncaughtException:\n` + error);
@@ -21,8 +32,6 @@ process.on("uncaughtException", (error) => {
 		client.users.cache.get(dev).send(`uncaughtException:\n${error}`);
 	});
 });
-
-client.login(process.env.TOKEN);
 
 if (deleteGlobalCommands) {
 	rest
