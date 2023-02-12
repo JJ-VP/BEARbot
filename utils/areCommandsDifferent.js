@@ -22,24 +22,14 @@ module.exports = (existingCommand, localCommand) => {
 				return true;
 			}
 
-			if (
-				localOption.description !== existingOption.description ||
-				localOption.type !== existingOption.type ||
-				(localOption.required || false) !== existingOption.required ||
-				(localOption.choices?.length || 0) !== (existingOption.choices?.length || 0) ||
-				areChoicesDifferent(localOption.choices || [], existingOption.choices || [])
-			) {
+			if (localOption.description !== existingOption.description || localOption.type !== existingOption.type || (localOption.required || false) !== (existingOption.required || false) || (localOption.choices?.length || 0) !== (existingOption.choices?.length || 0) || areChoicesDifferent(localOption.choices || [], existingOption.choices || [])) {
 				return true;
 			}
 		}
 		return false;
 	};
 
-	if (
-		existingCommand.description !== localCommand.description ||
-		existingCommand.options?.length !== (localCommand.options?.length || 0) ||
-		areOptionsDifferent(existingCommand.options, localCommand.options || [])
-	) {
+	if (existingCommand.description !== localCommand.description || existingCommand.options?.length !== (localCommand.options?.length || 0) || areOptionsDifferent(existingCommand.options, localCommand.options || [])) {
 		return true;
 	}
 
