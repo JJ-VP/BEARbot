@@ -13,34 +13,69 @@ module.exports = {
 			required: true,
 			type: ApplicationCommandOptionType.String,
 		},
+		{
+			name: "delete-my-data",
+			description: "Delete your message history, if set to true prompt is ignored.",
+			type: ApplicationCommandOptionType.Boolean,
+			default: false,
+		},
 	],
 
 	callback: async (client, interaction) => {
+		const clear = interaction.options.getBoolean("delete-my-data");
+		if (clear) {
+			const toDelete = await gptLog.findOne({ name: `${interaction.user.tag}` });
+			if (toDelete) {
+				toDelete.deleteOne();
+				await interaction.reply({ content: "You data has been deleted!", ephemeral: true });
+			} else {
+				await interaction.reply({ content: "We have no data on you, so we regret to inform you that we were unable to delete nothing!", ephemeral: true });
+			}
+			return;
+		}
 		await interaction.deferReply();
 		const configuration = new Configuration({
 			apiKey: process.env.AIAPI,
 		});
 		const openai = new OpenAIApi(configuration);
 		try {
-			const messageLog = await gptLog.findOne({ name: "Conversation" });
-			if (messageLog.convoLog.length >= 50) {
-				messageLog.convoLog.shift();
+			const user = interaction.user.tag;
+			const userName = interaction.member.displayName;
+			const prompt = interaction.options.getString("prompt");
+			const bot = client.user.username;
+			let messageLog = await gptLog.findOne({ name: `${user}` });
+			if (!messageLog) {
+				const newMessageLog = new gptLog({
+					name: `${user}`,
+					convoLog: `${bot} is a friendly chat bot.`,
+				});
+				await newMessageLog.save();
+				messageLog = await gptLog.findOne({ name: `${user}` });
 			}
-			messageLog.convoLog.push(`${interaction.user.username}: ${interaction.options.getString("prompt")}`);
-			const result = await openai.createCompletion({
-				model: "text-davinci-003",
-				prompt: `${client.user.username} is a friendly chatbot
-                ${client.user.username}: Hello, how can I help you?${messageLog.convoLog}
-                ${client.user.username}:`,
-				max_tokens: 500,
-				temperature: 0.2,
-				user: interaction.user.username,
-			});
-			if (messageLog.convoLog.length >= 50) {
-				messageLog.convoLog.shift();
+
+			try {
+				const result = await openai.createCompletion({
+					model: "text-davinci-003",
+					prompt: `${messageLog.convoLog.join("\n")}\n${userName}: ${prompt}\n${bot}:`,
+					max_tokens: 500,
+					temperature: 0.2,
+					user: user,
+				});
+
+				actualResult = result.data.choices[0].text.trim();
+
+				while (messageLog.convoLog.length >= 9) {
+					messageLog.convoLog.shift();
+				}
+				messageLog.convoLog.push(`${userName}: ${prompt}`);
+				messageLog.convoLog.push(`${bot}: ${actualResult}`);
+
+				await messageLog.save();
+				responseType = "Output";
+			} catch (error) {
+				actualResult = `${error.response.data.error.message}\nRequest failed with status code ${error.response.status}: ${error.response.statusText}`;
+				responseType = "ERROR";
 			}
-			messageLog.convoLog.push(`${client.user.username}:${result.data.choices[0].text}`);
-			await messageLog.save();
 
 			let outputEmbed = new EmbedBuilder()
 				.setColor(0x562d1a)
@@ -48,11 +83,11 @@ module.exports = {
 				.addFields(
 					{
 						name: "Input:",
-						value: "```\n" + `${interaction.options.getString("prompt")}` + "```",
+						value: "```\n" + `${prompt}` + "```",
 					},
 					{
-						name: "Output:",
-						value: "```\n" + `${result.data.choices[0].text}` + "```",
+						name: `${responseType}:`,
+						value: "```\n" + `${actualResult}` + "```",
 					},
 				);
 			interaction.editReply({ embeds: [outputEmbed] });
