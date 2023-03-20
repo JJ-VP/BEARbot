@@ -34,17 +34,17 @@ module.exports = {
 			}
 			return;
 		}
-		await interaction.deferReply();
-		const configuration = new Configuration({
-			apiKey: process.env.AIAPI,
-		});
-		const openai = new OpenAIApi(configuration);
 		try {
-			const user = interaction.user.tag;
 			const prompt = interaction.options.getString("prompt");
 			if (prompt.length > 500) {
-				return interaction.editReply(`Promp was too long, try something a little shorter!`);
+				return interaction.Reply({ content: `Promp was too long, try something a little shorter!`, ephemeral: true });
 			}
+			await interaction.deferReply();
+			const configuration = new Configuration({
+				apiKey: process.env.AIAPI,
+			});
+			const openai = new OpenAIApi(configuration);
+			const user = interaction.user.tag;
 			let messageLog = await gptLog.findOne({ name: `${user}` });
 			if (!messageLog) {
 				const newMessageLog = new gptLog({
