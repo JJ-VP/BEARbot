@@ -28,11 +28,17 @@ npm i
 ### Setup the bot token
 
 1. Get your bot token from [Discord Developer Portal](https://discord.com/developers/applications/)
-2. Create a file in the bot root called `.env`
-3. Put the following in the file
+2. Get your MongoDB token from [Mongodb cloud](https://cloud.mongodb.com/)
+3. Get your ChatGPT token from [OpenAI Account](https://platform.openai.com/account/api-keys)
+4. Get your pastebin token from [Pastebin API Docs](https://pastebin.com/doc_api#1)
+5. Create a file in the bot root called `.env`
+6. Put the following in the file
 
 ```
 TOKEN=*Token from Discord Developers portal*
+DBURI=*Token from MongoDB*
+AIAPI=*Toekn from ChatGPT*
+PASTEAPI=*Token from pastebin*
 ```
 
 ### Starting the bot

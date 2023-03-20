@@ -3,6 +3,7 @@ const { EmbedBuilder } = require("discord.js");
 module.exports = {
 	error: async (client, error, interaction) => {
 		try {
+			console.log(error);
 			let devs = ["176721924448059402"];
 			if (interaction) {
 				let size = Object.keys(interaction.options._hoistedOptions).length;

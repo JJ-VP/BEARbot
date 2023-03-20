@@ -2,6 +2,7 @@ const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
 const error = require("../../handlers/errorHandler.js");
 const { Configuration, OpenAIApi } = require("openai");
 const gptLog = require("../../models/gptLog");
+const { PasteClient, Publicity, ExpireDate } = require("pastebin-api");
 
 module.exports = {
 	name: "chatgpt",
@@ -40,40 +41,60 @@ module.exports = {
 		const openai = new OpenAIApi(configuration);
 		try {
 			const user = interaction.user.tag;
-			const userName = interaction.member.displayName;
 			const prompt = interaction.options.getString("prompt");
-			const bot = client.user.username;
+			if (prompt.length > 500) {
+				return interaction.editReply(`Promp was too long, try something a little shorter!`);
+			}
 			let messageLog = await gptLog.findOne({ name: `${user}` });
 			if (!messageLog) {
 				const newMessageLog = new gptLog({
 					name: `${user}`,
-					convoLog: `${bot} is a friendly chat bot.`,
+					convoLog: { role: `system`, content: `You are a slightly sarcastic chatbot.` },
 				});
 				await newMessageLog.save();
 				messageLog = await gptLog.findOne({ name: `${user}` });
 			}
 
+			messageLog.convoLog.push({
+				role: `user`,
+				content: prompt,
+			});
+
 			try {
-				const result = await openai.createCompletion({
-					model: "text-davinci-003",
-					prompt: `${messageLog.convoLog.join("\n")}\n${userName}: ${prompt}\n${bot}:`,
-					max_tokens: 500,
-					temperature: 0.2,
-					user: user,
+				const result = await openai.createChatCompletion({
+					model: "gpt-3.5-turbo",
+					messages: messageLog.convoLog,
+					temperature: 0.7,
+					top_p: 1,
+					frequency_penalty: 0.5,
 				});
 
-				actualResult = result.data.choices[0].text.trim();
+				//console.log(result.data);
 
-				while (messageLog.convoLog.length >= 9) {
+				if (result.data.choices[0].message.content.length > 1017) {
+					const patseClient = new PasteClient(process.env.PASTEAPI);
+					const url = await patseClient.createPaste({
+						code: `${result.data.choices[0].message.content}`,
+						expireDate: ExpireDate.OneDay,
+						name: "ChatGPT Response",
+						publicity: Publicity.Unlisted,
+					});
+					actualResult = `The response was too long, you can view it here: ${url}`;
+				} else {
+					actualResult = result.data.choices[0].message.content;
+				}
+
+				while (messageLog.convoLog.length >= 8) {
 					messageLog.convoLog.shift();
 				}
-				messageLog.convoLog.push(`${userName}: ${prompt}`);
-				messageLog.convoLog.push(`${bot}: ${actualResult}`);
+				messageLog.convoLog.push({ role: `${result.data.choices[0].message.role}`, content: `${result.data.choices[0].message.content}` });
+				responseType = "Output";
 
 				await messageLog.save();
-				responseType = "Output";
 			} catch (error) {
-				actualResult = `${error.response.data.error.message}\nRequest failed with status code ${error.response.status}: ${error.response.statusText}`;
+				console.log(error);
+				actualResult = `${error.response.status}: ${error.response.statusText}\n` + "```" + `${error.response.data.error.message}` + "```";
+				//actualResult = `Some text`;
 				responseType = "ERROR";
 			}
 
@@ -83,11 +104,11 @@ module.exports = {
 				.addFields(
 					{
 						name: "Input:",
-						value: "```\n" + `${prompt}` + "```",
+						value: `${prompt}`,
 					},
 					{
 						name: `${responseType}:`,
-						value: "```\n" + `${actualResult}` + "```",
+						value: `${actualResult}`,
 					},
 				);
 			interaction.editReply({ embeds: [outputEmbed] });
