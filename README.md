@@ -37,13 +37,11 @@ npm i
 ```
 TOKEN=*Token from Discord Developers portal*
 DBURI=*Token from MongoDB*
-AIAPI=*Toekn from ChatGPT*
+AIAPI=*Token from ChatGPT*
 PASTEAPI=*Token from pastebin*
 ```
 
 ### Starting the bot
 
-To run the bot in development mode you will require nodemon `npm i -g nodemon` to allow for file watching (automatic restart on changes)
-
 - Normal: `npm run start`
-- Dev: `npm run dev`
+- Dev: `npm run dev` *To run the bot in dev mode you will require nodemon `npm i -g nodemon` to allow for file watching (automatic restart on changes)*
