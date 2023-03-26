@@ -4,10 +4,11 @@ const error = require("../../handlers/errorHandler.js");
 module.exports = {
 	name: "ping",
 	description: "Pong!",
+	deleted: true,
 	options: [
 		{
 			name: "ephemeral",
-			description: "Should the bot respond silently?",
+			description: "Should the bot respond silently? (default is true)",
 			type: ApplicationCommandOptionType.Boolean,
 		},
 	],
@@ -21,11 +22,11 @@ module.exports = {
 	// botPermissions: [PermissionFlagsBits],
 
 	callback: async (client, interaction) => {
-		const ephemeral = interaction.options.getBoolean("ephemeral") || false;
-		if (ephemeral) {
-			await interaction.deferReply({ ephemeral: true });
-		} else {
+		const ephemeral = interaction.options.getBoolean("ephemeral");
+		if (ephemeral === false) {
 			await interaction.deferReply();
+		} else {
+			await interaction.deferReply({ ephemeral: true });
 		}
 		try {
 			const reply = await interaction.fetchReply();

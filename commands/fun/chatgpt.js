@@ -53,6 +53,8 @@ module.exports = {
 				});
 				await newMessageLog.save();
 				messageLog = await gptLog.findOne({ name: `${user}` });
+			} else {
+				messageLog.convoLog.unshift({ role: `system`, content: `You are a slightly sarcastic chatbot.` });
 			}
 
 			messageLog.convoLog.push({
