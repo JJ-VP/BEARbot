@@ -13,7 +13,7 @@ module.exports = async (client, oldChannel, newChannel) => {
 			.setTimestamp()
 			.setFooter({ text: "Event logged", iconURL: `${client.user.avatarURL({ format: "png", dynamic: true, size: 512 })}` });
 
-		await channel.send({ embeds: [embed], ephemeral: true });
+		// await channel.send({ embeds: [embed], ephemeral: true });
 	} catch (e) {
 		error.error(client, e);
 	}
