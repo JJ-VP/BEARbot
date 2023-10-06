@@ -4,6 +4,7 @@ const error = require("../../handlers/errorHandler.js");
 module.exports = {
 	name: "roleadd",
 	description: "Add a role to a user!",
+	deleted: true,
 	options: [
 		{
 			name: "target-user",
