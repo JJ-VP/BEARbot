@@ -16,7 +16,7 @@ const client = new Client({
 	try {
 		mongoose
 			.set("strictQuery", true)
-			.connect(process.env.DBURI)
+			.connect(process.env.DBURI, { autoIndex: false })
 			.then(console.log("Connected to MongoDB"))
 			.catch((e) => `Unable to connect to MongoDB:\n${e}`);
 		eventHandler(client);
