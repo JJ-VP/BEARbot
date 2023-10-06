@@ -28,7 +28,7 @@ module.exports = {
 					.setTimestamp()
 					.setFooter({ text: "Error logged", iconURL: `${client.user.avatarURL({ format: "png", dynamic: true, size: 512 })}` });
 
-				await interaction.editReply({ embeds: [embedReply], ephemeral: true });
+				await interaction.followUp({ embeds: [embedReply], ephemeral: true });
 				devs.forEach((dev) => {
 					client.users.cache.get(dev).send({ embeds: [embedDev] });
 				});
