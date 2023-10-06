@@ -4,7 +4,6 @@ const error = require("../../handlers/errorHandler.js");
 module.exports = {
 	name: "ping",
 	description: "Pong!",
-	deleted: true,
 	options: [
 		{
 			name: "ephemeral",
