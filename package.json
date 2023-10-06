@@ -15,6 +15,7 @@
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "mongoose": "^6.9.0",
+    "nodemon": "^2.0.22",
     "openai": "^3.1.0",
     "pastebin-api": "^5.1.5",
     "pretty-ms": "^7.0.1"
