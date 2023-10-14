@@ -5,7 +5,7 @@ const selfRoles = require("../../models/selfRoles");
 module.exports = {
 	name: "role",
 	description: "Role manager",
-	testOnly: true,
+	testOnly: false,
 	deleted: false,
 	options: [
 		{
